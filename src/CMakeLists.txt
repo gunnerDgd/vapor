@@ -15,6 +15,7 @@ add_library(vapor STATIC
         ../include/vp/core/run/halt.h
         ../include/vp/vp.h
         core/run.h
+        core.h
 )
 
 set_target_properties(vapor PROPERTIES LINKER_LANGUAGE C)

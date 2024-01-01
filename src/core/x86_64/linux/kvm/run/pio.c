@@ -40,24 +40,24 @@ bool_t
 
 void
     vp_pio_del
-        (vp_pio* par)                                                          {
-            vp_mmu* mmu = vp_run_mmu      (par->run)         ; if (!mmu) return;
-            vp_map* map = vp_mmu_find_port(mmu, par->addr, 1); if (!map) return;
+        (vp_pio* par)                                                                {
+            vp_mmu* mmu = vp_run_mmu      (par->run)         ; if (!mmu) goto del_ret;
+            vp_map* map = vp_mmu_find_port(mmu, par->addr, 1); if (!map) goto del_ret;
 
             switch (par->dir) {
             case vp_pio_in :
-                if (par->size == 1) { vp_pio_rd8 (map, par->addr, par->data); return; }
-                if (par->size == 2) { vp_pio_rd16(map, par->addr, par->data); return; }
-                if (par->size == 4) { vp_pio_rd32(map, par->addr, par->data); return; }
+                if (par->size == 1) { vp_pio_rd8 (map, par->addr, par->data); goto del_ret; }
+                if (par->size == 2) { vp_pio_rd16(map, par->addr, par->data); goto del_ret; }
+                if (par->size == 4) { vp_pio_rd32(map, par->addr, par->data); goto del_ret; }
                 break;
             case vp_pio_out:
-                if (par->size == 1) { vp_pio_wr8 (map, par->addr, par->data); return; }
-                if (par->size == 2) { vp_pio_wr16(map, par->addr, par->data); return; }
-                if (par->size == 4) { vp_pio_wr32(map, par->addr, par->data); return; }
+                if (par->size == 1) { vp_pio_wr8 (map, par->addr, par->data); goto del_ret; }
+                if (par->size == 2) { vp_pio_wr16(map, par->addr, par->data); goto del_ret; }
+                if (par->size == 4) { vp_pio_wr32(map, par->addr, par->data); goto del_ret; }
                 break;
-            default         : return;
+            default : goto del_ret;
             }
-
+    del_ret:
             par->run->run_task = 0;
             del (par->run);
 }

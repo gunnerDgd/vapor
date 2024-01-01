@@ -1,3 +1,5 @@
 /lib/crisp
 /lib/asterisk
 /.idea
+
+/examples/core/bin
