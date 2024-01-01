@@ -10,11 +10,12 @@
 extern obj_trait *vp_sys_t;
 typedef struct    vp_sys  {
     obj     head     ;
-    void*   sys      ;
+    u32_t   sys      ;
     list    cpu      ;
     u64_t   cpu_count;
     vp_cpu *bsp      ;
     vp_mmu *mmu      ;
+    u64_t   state    ;
 }   vp_sys;
 
 bool_t  vp_sys_new  (vp_sys*, u32_t, va_list);

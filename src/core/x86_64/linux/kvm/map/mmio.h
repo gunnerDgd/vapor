@@ -4,9 +4,6 @@
 #include "../map.h"
 
 typedef struct vp_mmio_ops                    {
-    bool_t (*map)  (obj*, vp_map*)            ;
-    bool_t (*unmap)(obj*, vp_map*)            ;
-
     bool_t (*rd8)  (obj*, void*, u8_t*)       ;
     bool_t (*rd16) (obj*, void*, u16_t*)      ;
     bool_t (*rd32) (obj*, void*, u32_t*)      ;

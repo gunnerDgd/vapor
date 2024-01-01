@@ -8,11 +8,8 @@ bool_t
             if (!par_ops)                  return false_t;
             if (!par_pio)                  return false_t;
             if (trait_of(par) != vp_map_t) return false_t;
-            if (par->ops.mem)              return false_t;
 
-            if (!par_ops->map)             return false_t;
-            if (!par_ops->unmap)           return false_t;
-
+            if (!vp_map_none(par))         return false_t;
             if (!par_ops->rd8)             return false_t;
             if (!par_ops->rd16)            return false_t;
             if (!par_ops->rd32)            return false_t;
@@ -21,8 +18,8 @@ bool_t
             if (!par_ops->wr16)            return false_t;
             if (!par_ops->wr32)            return false_t;
 
-            par->ops.ops_pio = par_ops;
-            par->ops.pio     = par_pio;
+            par->map_ops.pio = par_ops;
+            par->map         = par_pio;
 
             return true_t;
 }
@@ -32,12 +29,12 @@ bool_t
         (vp_map* par, u16_t par_pio, u8_t* par_buf)      {
             if (!par)                      return false_t;
             if (trait_of(par) != vp_map_t) return false_t;
-            if (!par->ops.ops_pio)         return false_t;
-            if (!par->ops.pio)             return false_t;
+            if (!par->map_ops.pio)         return false_t;
+            if (!par->map)                 return false_t;
 
-            return par->ops.ops_pio->rd8 (
-                   par->ops.pio,
-                   par_pio      ,
+            return par->map_ops.pio->rd8 (
+                   par->map_ops.pio,
+                   par_pio         ,
                    par_buf
             );
 }
@@ -47,12 +44,12 @@ bool_t
         (vp_map* par, u16_t par_pio, u16_t* par_buf)     {
             if (!par)                      return false_t;
             if (trait_of(par) != vp_map_t) return false_t;
-            if (!par->ops.ops_pio)         return false_t;
-            if (!par->ops.pio)             return false_t;
+            if (!par->map)                 return false_t;
+            if (!par->map_ops.pio)         return false_t;
 
-            return par->ops.ops_pio->rd16 (
-                   par->ops.pio,
-                   par_pio      ,
+            return par->map_ops.pio->rd16 (
+                   par->map_ops.pio,
+                   par_pio         ,
                    par_buf
             );
 }
@@ -62,27 +59,27 @@ bool_t
         (vp_map* par, u16_t par_pio, u32_t* par_buf)     {
             if (!par)                      return false_t;
             if (trait_of(par) != vp_map_t) return false_t;
-            if (!par->ops.ops_pio)         return false_t;
-            if (!par->ops.pio)             return false_t;
+            if (!par->map)                 return false_t;
+            if (!par->map_ops.pio)         return false_t;
 
-            return par->ops.ops_pio->rd32 (
-                   par->ops.pio,
-                   par_pio      ,
+            return par->map_ops.pio->rd32 (
+                   par->map_ops.pio,
+                   par_pio         ,
                    par_buf
             );
 }
 
 bool_t
     vp_pio_wr8
-        (vp_map* par, u16_t par_pio, u8_t* par_buf)       {
+        (vp_map* par, u16_t par_pio, u8_t* par_buf)      {
             if (!par)                      return false_t;
             if (trait_of(par) != vp_map_t) return false_t;
-            if (!par->ops.ops_pio)         return false_t;
-            if (!par->ops.pio)             return false_t;
+            if (!par->map)                 return false_t;
+            if (!par->map_ops.pio)         return false_t;
 
-            return par->ops.ops_pio->wr8 (
-                   par->ops.pio,
-                   par_pio      ,
+            return par->map_ops.pio->wr8 (
+                   par->map_ops.pio,
+                   par_pio         ,
                    par_buf
             );
 }
@@ -92,12 +89,12 @@ bool_t
         (vp_map* par, u16_t par_pio, u16_t* par_buf)     {
             if (!par)                      return false_t;
             if (trait_of(par) != vp_map_t) return false_t;
-            if (!par->ops.ops_pio)         return false_t;
-            if (!par->ops.pio)             return false_t;
+            if (!par->map)                 return false_t;
+            if (!par->map_ops.pio)         return false_t;
 
-            return par->ops.ops_pio->wr16 (
-                   par->ops.pio,
-                   par_pio      ,
+            return par->map_ops.pio->wr16 (
+                   par->map_ops.pio,
+                   par_pio         ,
                    par_buf
             );
 }
@@ -107,12 +104,12 @@ bool_t
         (vp_map* par, u16_t par_pio, u32_t* par_buf)     {
             if (!par)                      return false_t;
             if (trait_of(par) != vp_map_t) return false_t;
-            if (!par->ops.ops_pio)         return false_t;
-            if (!par->ops.pio)             return false_t;
+            if (!par->map)                 return false_t;
+            if (!par->map_ops.pio)         return false_t;
 
-            return par->ops.ops_pio->wr32 (
-                   par->ops.pio,
-                   par_pio      ,
+            return par->map_ops.pio->wr32 (
+                   par->map_ops.pio,
+                   par_pio         ,
                    par_buf
             );
 }

@@ -9,6 +9,7 @@
 #include "core/map.h"
 #include "core/map/mmio.h"
 #include "core/map/pio.h"
+#include "core/map/mem.h"
 
 #include "core/mmu.h"
 #include "core/run.h"

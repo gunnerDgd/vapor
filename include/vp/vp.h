@@ -2,6 +2,7 @@
 #define __VP_H__
 
 #include "core.h"
+#include "arch.h"
 
 #define vp_main()                   \
     int main_run();                 \

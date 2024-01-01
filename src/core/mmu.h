@@ -1,8 +1,10 @@
-//
-// Created by enbay on 23. 12. 25.
-//
+#ifndef __CORE_CPU_H__
+#define __CORE_CPU_H__
 
-#ifndef VAPOR_MMU_H
-#define VAPOR_MMU_H
+#ifdef PRESET_ARCH_X86_64
+#ifdef PRESET_LINUX_KVM
+#include "x86_64/linux/kvm/mmu.h"
+#endif
+#endif
 
-#endif //VAPOR_MMU_H
+#endif

@@ -1,8 +1,9 @@
-//
-// Created by enbay on 23. 12. 25.
-//
+#ifndef __VP_ARCH_H__
+#define __VP_ARCH_H__
 
-#ifndef VAPOR_ARCH_H
-#define VAPOR_ARCH_H
+#ifdef PRESET_ARCH_X86_64
+#include "arch/x86_64/reg.h"
+#include "arch/x86_64/sreg.h"
+#endif
 
-#endif //VAPOR_ARCH_H
+#endif

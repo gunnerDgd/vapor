@@ -1,7 +1,7 @@
 add_library(vapor STATIC
         ../include/vp/core/cpu.h
         ../include/vp/arch/x86_64/reg.h
-        ../include/vp/arch/x86_64/seg.h
+        ../include/vp/arch/x86_64/sreg.h
         ../include/vp/core/sys.h
         ../include/vp/core/mmu.h
         ../include/vp/core/map.h
@@ -14,6 +14,7 @@ add_library(vapor STATIC
         ../include/vp/core/run/mmio.h
         ../include/vp/core/run/halt.h
         ../include/vp/vp.h
+        core/run.h
 )
 
 set_target_properties(vapor PROPERTIES LINKER_LANGUAGE C)
@@ -51,6 +52,9 @@ elseif (UNIX AND NOT APPLE)
                 core/sys.h
                 core/mmu.h
 
+                core/x86_64/linux/kvm/core.h
+                core/x86_64/linux/kvm/core.c
+
                 core/x86_64/linux/kvm/map.h
                 core/x86_64/linux/kvm/map.c
 
@@ -59,8 +63,12 @@ elseif (UNIX AND NOT APPLE)
 
                 core/x86_64/linux/kvm/map/pio.h
                 core/x86_64/linux/kvm/map/pio.c
+
                 core/x86_64/linux/kvm/map/mmio.h
                 core/x86_64/linux/kvm/map/mmio.c
+
+                core/x86_64/linux/kvm/map/mem.h
+                core/x86_64/linux/kvm/map/mem.c
 
                 core/x86_64/linux/kvm/mmu.h
                 core/x86_64/linux/kvm/mmu.c
@@ -70,14 +78,12 @@ elseif (UNIX AND NOT APPLE)
 
                 core/x86_64/linux/kvm/cpu.h
                 core/x86_64/linux/kvm/cpu.c
-                core/x86_64/linux/kvm/core.h
-                core/x86_64/linux/kvm/core.c
 
                 core/x86_64/linux/kvm/cpu/reg.h
                 core/x86_64/linux/kvm/cpu/reg.c
 
-                core/x86_64/linux/kvm/cpu/seg.h
-                core/x86_64/linux/kvm/cpu/seg.c
+                core/x86_64/linux/kvm/cpu/sreg.h
+                core/x86_64/linux/kvm/cpu/sreg.c
 
                 core/x86_64/linux/kvm/run.h
                 core/x86_64/linux/kvm/run.c
@@ -90,8 +96,7 @@ elseif (UNIX AND NOT APPLE)
 
                 core/x86_64/linux/kvm/run/halt.h
                 core/x86_64/linux/kvm/run/halt.c
-                core/x86_64/linux/kvm/map/mem.h
-                core/x86_64/linux/kvm/map/mem.c
+
         )
 
         target_link_libraries(vapor-core build build-arch build-arch-asm)

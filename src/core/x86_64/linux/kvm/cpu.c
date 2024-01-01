@@ -25,6 +25,7 @@ bool_t
             if (!par_cpu->sys)                      return false_t;
             if (trait_of(par_cpu->sys) != vp_sys_t) return false_t;
 
+            par_cpu->state    = vp_cpu_off                                                 ;
             par_cpu->cpu_id   = par_cpu->sys->cpu_count                                    ;
             par_cpu->cpu      = ioctl (par_cpu->sys->sys, KVM_CREATE_VCPU, par_cpu->cpu_id); if (par_cpu->cpu < 0) return false_t;
             par_cpu->run_size = ioctl (kvm              , KVM_GET_VCPU_MMAP_SIZE, 0)       ;
@@ -40,6 +41,10 @@ bool_t
             if (!par_cpu->run)           return false_t;
             if (par_cpu->run_size == -1) return false_t;
             if (par_cpu->cpu      == -1) return false_t;
+            if(!par_cpu->sys->bsp)                     {
+                par_cpu->sys->bsp = ref(par_cpu);
+                par_cpu->state    = vp_cpu_on   ;
+            }
 
             par_cpu->sys_hnd = list_push_back(&par_cpu->sys->cpu, par_cpu);
             par_cpu->sys     = ref(par_cpu->sys)                          ;

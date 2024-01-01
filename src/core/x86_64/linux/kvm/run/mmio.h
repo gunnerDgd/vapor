@@ -9,7 +9,6 @@ extern obj_trait* vp_mmio_t;
 typedef struct    vp_mmio  {
     obj            head;
     struct vp_run *run ;
-    struct vp_map *map ;
     u64_t          dir ;
     u64_t          addr;
     u64_t          size;

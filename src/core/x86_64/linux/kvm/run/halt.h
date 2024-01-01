@@ -7,7 +7,6 @@ extern obj_trait *vp_halt_t;
 typedef struct    vp_halt  {
     obj            head;
     struct vp_run* run ;
-    struct vp_cpu* cpu ;
 }   vp_halt;
 
 bool_t         vp_halt_new  (vp_halt*, u32_t, va_list);

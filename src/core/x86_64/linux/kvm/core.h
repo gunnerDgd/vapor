@@ -1,5 +1,5 @@
-#ifndef __BASE_H__
-#define __BASE_H__
+#ifndef __CORE_KVM_CORE_H__
+#define __CORE_KVM_CORE_H__
 
 #include <obj.h>
 

@@ -3,6 +3,16 @@
 #include "../run.h"
 #include "../cpu.h"
 
+obj_trait vp_halt_trait     = {
+    .on_new   = &vp_halt_new  ,
+    .on_clone = &vp_halt_clone,
+    .on_ref   = 0             ,
+    .on_del   = &vp_halt_del  ,
+    .size     = sizeof(vp_halt)
+};
+
+obj_trait *vp_halt_t = &vp_halt_trait;
+
 bool_t
     vp_halt_new
         (vp_halt* par_halt, u32_t par_count, va_list par) {
@@ -10,7 +20,7 @@ bool_t
             if (!par_halt->run)                      return false_t;
             if (trait_of(par_halt->run) != vp_run_t) return false_t;
 
-            par_halt->cpu = ref(par_halt->cpu);
+            par_halt->run = ref(par_halt->run);
             return true_t;
 }
 
@@ -22,10 +32,9 @@ bool_t
 
 void
     vp_halt_del
-        (vp_halt* par)                  {
-            par->cpu->state = vp_cpu_off;
-            par->run->run   = 0         ;
-            del(par->cpu);
+        (vp_halt* par)                       {
+            par->run->cpu->state = vp_cpu_off;
+            par->run->run_task   = 0         ;
             del(par->run);
 }
 
@@ -35,5 +44,5 @@ struct vp_cpu*
             if (!par)                       return false_t;
             if (trait_of(par) != vp_halt_t) return false_t;
 
-            return par->cpu;
+            return par->run->cpu;
 }
