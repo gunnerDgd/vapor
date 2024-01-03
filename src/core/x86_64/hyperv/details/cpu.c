@@ -18,11 +18,11 @@ i32_t
             if (!par_pio)                  return -1;
             if (trait_of(par) != vp_pio_t) return -1; vp_pio* pio = par;
 
-            u64_t dir  = par_pio->Direction              ;
-            void *data = par_pio->Data                   ;
-            u64_t addr = par_pio->Port                   ; if (addr > 0xFFFF) return -1;
-            u64_t size = par_pio->AccessSize             ; if (size > 4)      return -1;
-            void* port = vp_port_find(pio->root, addr, 1); if (!port)         return -1;
+            u64_t dir  =  par_pio->Direction              ;
+            void* data = &par_pio->Data                   ;
+            u64_t addr =  par_pio->Port                   ; if (addr > 0xFFFF) return -1;
+            u64_t size =  par_pio->AccessSize             ; if (size > 4)      return -1;
+            void* port =  vp_port_find(pio->root, addr, 1); if (!port)         return -1;
 
             if (dir == vp_pio_in)  vp_map_read (port, addr, data, size);
             if (dir == vp_pio_out) vp_map_write(port, addr, data, size);
@@ -157,10 +157,10 @@ bool_t
             if (!par_cpu->root) return false_t;
             if (!par_cpu->node) return false_t;
 
-            if (trait_of(par_cpu->root) != vp_root_t)                                    return false_t;
-            if (trait_of(par_cpu->node) != vp_node_t)                                    return false_t;
-            if (WHvEmulatorCreateEmulator(&vp_cpu_do, &par_cpu->emu, 0)         != S_OK) return false_t;
-            if (WHvCreateVirtualProcessor(par_cpu->root->root, par_cpu->cpu, 0) != S_OK) {
+            if (trait_of(par_cpu->root) != vp_root_t)                                     return false_t;
+            if (trait_of(par_cpu->node) != vp_node_t)                                     return false_t;
+            if (WHvEmulatorCreateEmulator (&vp_cpu_do, &par_cpu->emu, 0)         != S_OK) return false_t;
+            if (WHvCreateVirtualProcessor (par_cpu->root->root, par_cpu->cpu, 0) != S_OK) {
                 WHvEmulatorDestroyEmulator(par_cpu->emu);
                 return false_t;
             }

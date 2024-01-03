@@ -30,13 +30,13 @@ obj_trait mmio_dev_t         = {
     .size     = sizeof(mmio_dev)
 };
 
-vp_main()                                              {
-    vp_root root     = make(vp_root_t) from(1, 4)      ;
-    vp_node node0    = vp_root_node(root , 0)          ;
-    vp_cpu  cpu0     = vp_node_cpu (node0, 0)          ;
-    vp_map  map0     = vp_root_map (root, 4  kb, 8  kb);
-    vp_map  map1     = vp_root_map (root, 12 kb, 16 kb);
-    vp_map  map2     = vp_root_map (root, 0  kb, 4  kb);
+vp_main()                                           {
+    vp_root root  = make(vp_root_t) from(1, 4)      ;
+    vp_node node0 = vp_root_node(root , 0)          ;
+    vp_cpu  cpu0  = vp_node_cpu (node0, 0)          ;
+    vp_map  map0  = vp_root_map (root, 4  kb, 8  kb);
+    vp_map  map1  = vp_root_map (root, 12 kb, 16 kb);
+    vp_map  map2  = vp_root_map (root, 0  kb, 4  kb);
 
     void *map0_mem = VirtualAlloc(0, 4 kb, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
     map0 = vp_map_mem (map0, map0_mem);
