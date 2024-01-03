@@ -1,9 +1,9 @@
-#ifndef __VP_CORE_CPU_H__
-#define __VP_CORE_CPU_H__
+#ifndef __CORE_CPU_H__
+#define __CORE_CPU_H__
 
 #include <obj.h>
 
-extern  obj_trait* vp_cpu_t;
-typedef obj*       vp_cpu  ;
+typedef void* vp_cpu;
+obj*          vp_cpu_run(vp_cpu);
 
 #endif

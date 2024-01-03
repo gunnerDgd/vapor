@@ -1,15 +1,13 @@
 #include <vp/vp.h>
 
 #include <stdio.h>
-#include <sys/mman.h>
+#include <Windows.h>
 
-bool_t pio_rd8 (obj* par, u16_t port, u8_t * buf) { *buf = 8; return true_t; }
-bool_t pio_rd16(obj* par, u16_t port, u16_t* buf) { *buf = 8; return true_t; }
-bool_t pio_rd32(obj* par, u16_t port, u32_t* buf) { *buf = 8; return true_t; }
+bool_t pio_map  (obj* par, vp_map par_map) { printf("PIO Mapped\n")  ; return true_t; }
+bool_t pio_unmap(obj* par)                 { printf("PIO Unmapped\n"); return true_t; }
 
-bool_t pio_wr8 (obj* par, u16_t port, u8_t * buf) { printf("PIO OUTPUT (1) : %d\n", *buf); return true_t; }
-bool_t pio_wr16(obj* par, u16_t port, u16_t* buf) { printf("PIO OUTPUT (2) : %d\n", *buf); return true_t;  }
-bool_t pio_wr32(obj* par, u16_t port, u32_t* buf) { printf("PIO OUTPUT (4) : %d\n", *buf); return true_t;  }
+bool_t pio_read (obj* par, void* port, u8_t* buf, u64_t len) { *buf = 8;                              return true_t; }
+bool_t pio_write(obj* par, void* port, u8_t* buf, u64_t len) { printf("PIO OUTPUT (1) : %d\n", *buf); return true_t; }
 
 const u8_t mmap0_code[] = {
         0xba, 0xf8, 0x03, /* mov $0x3f8, %dx */
@@ -24,13 +22,11 @@ typedef struct pio_dev {
     obj head;
 }   pio_dev;
 
-vp_pio_ops pio_ops = {
-    .rd8  = pio_rd8 ,
-    .rd16 = pio_rd16,
-    .rd32 = pio_rd32,
-    .wr8  = pio_wr8 ,
-    .wr16 = pio_wr16,
-    .wr32 = pio_wr32
+vp_map_ops map_ops  = {
+    .map   = pio_map  ,
+    .unmap = pio_unmap,
+    .read  = pio_read ,
+    .write = pio_write
 };
 
 obj_trait pio_dev_t         = {
@@ -41,27 +37,20 @@ obj_trait pio_dev_t         = {
     .size     = sizeof(pio_dev)
 };
 
-vp_main()                                                                                                          {
-    vp_sys   sys = make (vp_sys_t)   from (0)     ; if (!sys) { printf("Failed to Create VM System\n"); return -1; }
-    vp_cpu   cpu = make (vp_cpu_t)   from (1, sys); if (!cpu) { printf("Failed to Create VCPU\n")     ; return -1; }
-    pio_dev* pio = make (&pio_dev_t) from (0)     ; if (!pio) { printf("Failed to Create PIO\n")      ; return -1; }
+vp_main()                                              {
+    vp_root root     = make(vp_root_t) from(1, 4)      ;
+    vp_node node0    = vp_root_node(root , 0)          ;
+    vp_cpu  cpu0     = vp_node_cpu (node0, 0)          ;
+    vp_map  map0     = vp_root_map (root, 4  kb, 8 kb) ;
+    vp_map  map1     = vp_port_map (root, 0x3f8, 0x3f9);
 
-    vp_map   map0  = make (vp_map_t) from (2, 4 kb, 8 kb)  ;
-    vp_map   map1  = make (vp_map_t) from (2, 0x3f8, 0x3f9);
-    void    *mmap0 = mmap (0, 4 kb, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-    mem_copy(mmap0, mmap0_code, sizeof(mmap0_code));
+    void   *map0_mem = VirtualAlloc(0, 4 kb, MEM_COMMIT, PAGE_READWRITE);
+    map0 = vp_map_mem(map0, map0_mem);
+    map1 = vp_map_pio(map1, &map_ops, make (&pio_dev_t) from (0));
+    mem_copy(map0_mem, mmap0_code, sizeof(mmap0_code));
 
-    if (!map0)                              { printf("Failed to Create Map"); return -1; }
-    if (!vp_mem_map(map0, mmap0, 4 kb))     { printf("Failed to Map Memory"); return -1; }
-    if (!vp_pio_map(map1, &pio_ops, pio))   { printf("Failed to Map Memory"); return -1; }
-
-    if (!vp_mmu_map(vp_sys_mmu(sys), map0)) { printf("Failed to Map Memory"); return -1; }
-    if (!vp_mmu_map(vp_sys_mmu(sys), map1)) { printf("Failed to Map Memory"); return -1; }
-
-    vp_reg cpu_reg  = make (vp_reg_t)  from (1, cpu);
-    vp_reg cpu_sreg = make (vp_sreg_t) from (1, cpu);
-    if   (!cpu_reg)  { printf("Failed to Fetch Register"); return -1; }
-    if   (!cpu_sreg) { printf("Failed to Fetch Register"); return -1; }
+    vp_reg cpu_reg  = make (vp_reg_t)  from (1, cpu0);
+    vp_reg cpu_sreg = make (vp_sreg_t) from (1, cpu0);
 
     vp_reg_set(cpu_reg, vp_rip   , 4 kb);
     vp_reg_set(cpu_reg, vp_rax   , 3)   ;
@@ -74,9 +63,6 @@ vp_main()                                                                       
     del(cpu_reg) ;
     del(cpu_sreg);
 
-    vp_run run = make (vp_run_t) from (1, cpu);
-    if (!run) { printf("Failed to Run vCPU"); return -1; }
-
-    vp_pio run_pio = make (vp_pio_t) from (1, run);
-    del   (run_pio);
+    obj* run = vp_cpu_run(cpu0);
+    del (run);
 }

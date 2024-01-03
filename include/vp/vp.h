@@ -4,13 +4,13 @@
 #include "core.h"
 #include "arch.h"
 
-#define vp_main()                   \
-    int main_run();                 \
-    int main    () {                \
-        if (!core_init()) return -1;\
-        main_run();                 \
-        core_deinit();              \
-    }                               \
+#define vp_main()             \
+    int main_run();           \
+    int main()       {        \
+        core_init  ();        \
+        int ret = main_run ();\
+        core_deinit();        \
+    }                         \
     int main_run()
 
 #endif

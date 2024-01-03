@@ -1,11 +1,8 @@
-#ifndef __VP_CORE_RUN_HALT_H__
-#define __VP_CORE_RUN_HALT_H__
+#ifndef __CORE_RUN_HALT_H__
+#define __CORE_RUN_HALT_H__
 
-#include "../cpu.h"
+#include <obj.h>
 
-extern  obj_trait *vp_halt_t;
-typedef obj*       vp_halt  ;
-
-vp_cpu vp_halt_cpu(vp_halt) ;
+extern obj_trait* vp_halt_t;
 
 #endif

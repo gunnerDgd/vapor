@@ -1,5 +1,5 @@
-#ifndef __CORE_CPU_H__
-#define __CORE_CPU_H__
+#ifndef __CORE_MMU_H__
+#define __CORE_MMU_H__
 
 #ifdef PRESET_ARCH_X86_64
 #ifdef PRESET_LINUX_KVM
